@@ -21,8 +21,12 @@ from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, 
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
+from ament_index_python.packages import get_package_share_directory
+import os
 
 def generate_launch_description():
+    package_name='hoverboard_driver'
+    
     # Declare arguments
     declared_arguments = []
     declared_arguments.append(
@@ -74,6 +78,15 @@ def generate_launch_description():
             ("/hoverboard_base_controller/cmd_vel_unstamped", "/cmd_vel"),
         ],
     )
+
+    twist_mux_params = os.path.join(get_package_share_directory(package_name),'config','twist_mux.yaml')
+    twist_mux = Node(
+        package="twist_mux",
+        executable="twist_mux",
+        parameters=[twist_mux_params, {'use_sim_time': False}],
+        remappings=[('/cmd_vel_out', '/hoverboard_base_controller/cmd_vel_unstamped')]
+    )
+
     #rviz_node = Node(
     #    package="rviz2",
     #    executable="rviz2",
@@ -113,6 +126,7 @@ def generate_launch_description():
 
     nodes = [
         control_node,
+        twist_mux,
         robot_state_pub_node,
         joint_state_broadcaster_spawner,
        # delay_rviz_after_joint_state_broadcaster_spawner,
