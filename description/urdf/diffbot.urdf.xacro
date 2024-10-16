@@ -11,8 +11,6 @@
   <!-- Import diffbot ros2_control description -->
   <xacro:include filename="$(find hoverboard_driver)/ros2_control/hoverboard_driver.ros2_control.xacro" />
 
-  <!-- Import lidar description -->
-
   <xacro:diffbot prefix="$(arg prefix)" />
 
   <xacro:hoverboard_driver_ros2_control
