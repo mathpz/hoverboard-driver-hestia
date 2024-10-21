@@ -43,6 +43,10 @@
       </inertial>
     </link>
 
+    <gazebo reference="${prefix}base_link">
+      <material>Gazebo/Orange</material>
+    </gazebo>
+
     <joint name="${prefix}left_wheel_joint" type="continuous">
       <parent link="${prefix}base_link"/>
       <child link="${prefix}left_wheel"/>
@@ -78,6 +82,10 @@
         </inertial>
       </link>
 
+      <gazebo reference="${prefix}left_wheel">
+          <material>Gazebo/Black</material>
+      </gazebo>
+
     <joint name="${prefix}right_wheel_joint" type="continuous">
       <parent link="${prefix}base_link"/>
       <child link="${prefix}right_wheel"/>
@@ -112,6 +120,10 @@
           izz="${wheel_mass / 2.0 * wheel_radius*wheel_radius}"/>
         </inertial>
       </link>
+
+      <gazebo reference="${prefix}right_wheel">
+          <material>Gazebo/Black</material>
+      </gazebo>
 
     <joint name="${prefix}caster_frontal_wheel_joint" type="fixed">
       <parent link="${prefix}base_link"/>
@@ -152,6 +164,12 @@
       <origin xyz="${-base_width/2 + caster_wheel_radius} 0 -0.045" rpy="0 0 0"/>
     </joint>
 
+    <gazebo reference="${prefix}caster_frontal_wheel">
+        <material>Gazebo/White</material>
+        <mu1 value="0.001"/>
+        <mu2 value="0.001"/>
+    </gazebo>
+
     <!-- caster rear wheel Link -->
     <link name="${prefix}caster_rear_wheel">
       <collision>
@@ -178,6 +196,12 @@
           izz="${caster_wheel_mass * 0.4 * (caster_wheel_radius * caster_wheel_radius)}"/>
         </inertial>
       </link>
+
+      <gazebo reference="${prefix}caster_rear_wheel">
+        <material>Gazebo/White</material>
+        <mu1 value="0.001"/>
+        <mu2 value="0.001"/>
+      </gazebo>
 
   <!-- BASE_FOOTPRINT LINK -->
   <joint name="base_footprint_joint" type="fixed">
