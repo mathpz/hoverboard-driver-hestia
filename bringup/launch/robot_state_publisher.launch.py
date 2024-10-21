@@ -10,15 +10,16 @@ from launch_ros.actions import Node
 import xacro
 
 def generate_launch_description():
-    package_name = "hoverboard_drive"
+    package_name = "hoverboard_driver"
 
     # check if sim_time is True or False
     use_sim_time = LaunchConfiguration('use_sim_time')
     use_ros2_control = LaunchConfiguration('use_ros2_control')
 
-    # Process the URDF
-    pkg_path = os.path.join(get_package_share_directory(package_name))
-    xacro_file = os.path.join(pkg_path, 'description/urdf/', 'difbot.urdf.xacro')
+    # Process the URDF file
+    pkg_path = os.path.join(get_package_share_directory('hoverboard_driver'))
+    xacro_file = os.path.join(pkg_path,'urdf','diffbot.urdf.xacro')
+    # robot_description_config = xacro.process_file(xacro_file).toxml()
     robot_description_config = Command(['xacro ', xacro_file, ' use_ros2_control:=', use_ros2_control, ' sim_mode:=', use_sim_time])
 
     # Create a robot_state_publisher node

@@ -41,7 +41,7 @@ def generate_launch_description():
     # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
     spawner_entity = Node(
         package='gazebo_ros',
-        executable='spawn_entity.py',
+        executable='spawn_entity',
         arguments=['-topic', 'robot_description', '-entity', 'hestia'],
         output='screen'
     )
@@ -64,7 +64,7 @@ def generate_launch_description():
         joystick,
         twist_mux,
         gazebo,
-        spawn_entity,
+        spawner_entity,
         diff_drive_spawner,
         joint_broad_spawner
     ])
