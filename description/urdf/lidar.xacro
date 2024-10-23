@@ -4,7 +4,7 @@
 <joint name="lidar_joint" type="fixed">
   <parent link="${prefix}base_link"/>
   <child link="lidar_link"/>
-  <origin xyz="0.30 0 0.20" rpy="0 0 ${PI}"/>
+  <origin xyz="0.30 0 0.20" rpy="0 0 0"/>
 </joint>
 
   <link name="lidar_link">
@@ -39,8 +39,8 @@
         <horizontal>
           <samples>360</samples>
           <resolution>1.000000</resolution>
-          <min_angle>0.000000</min_angle>
-          <max_angle>6.280000</max_angle>
+          <min_angle>-1.0472</min_angle>
+          <max_angle>1.0472</max_angle>
         </horizontal>
       </scan>
       <range>
