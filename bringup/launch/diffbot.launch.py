@@ -54,7 +54,7 @@ def generate_launch_description():
 
     robot_controllers = PathJoinSubstitution(
         [
-            FindPackageShare("hoverboard_driver"),
+            get_package_share_directory(package_name),
             "config",
             "hoverboard_controllers.yaml",
         ]
@@ -126,11 +126,11 @@ def generate_launch_description():
 
     nodes = [
         control_node,
-        twist_mux,
         robot_state_pub_node,
         joint_state_broadcaster_spawner,
        # delay_rviz_after_joint_state_broadcaster_spawner,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
+        twist_mux,
     ]
 
     return LaunchDescription(declared_arguments + nodes)

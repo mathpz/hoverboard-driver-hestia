@@ -367,15 +367,19 @@ namespace hoverboard_driver
 
   void hoverboard_driver::protocol_recv(const rclcpp::Time &time, char byte)
   {
+    // RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "PROTOCOL_RECV!");
+
     start_frame = ((uint16_t)(byte) << 8) | (uint8_t)prev_byte;
 
     // Read the start frame
     if (start_frame == START_FRAME)
     {
+      // RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "msg_speedR: %ld", msg_len);
       p = (char *)&msg;
       *p++ = prev_byte;
       *p++ = byte;
       msg_len = 2;
+
     }
     else if (msg_len >= 2 && msg_len < sizeof(SerialFeedback))
     {
@@ -383,8 +387,26 @@ namespace hoverboard_driver
       *p++ = byte;
       msg_len++;
     }
+    
+    //RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "MSG_len: %ld", msg_len);
+    //RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "MSG: %c", byte);
+    
+    //RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "msg_start: %d", msg.start);
+    //RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "msg_cmd1: %d", msg.cmd1);
+    //RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "msg_cmd2: %d", msg.cmd2);
+    
+    //RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "msg_speedR: %d", msg.speedR_meas);
+    //RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "msg_speedL: %d", msg.speedL_meas);
+    
+    //RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "msg_wheelR_cnt: %d", msg.wheelR_cnt);
+    //RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "msg_wheelL_cnt: %d", msg.wheelL_cnt);
+    //RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "msg_left_dc_curr: %d", msg.left_dc_curr);
+    //RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "msg_right_dc_curr: %d", msg.right_dc_curr);
+    //RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "msg_batVoltage: %d", msg.batVoltage);
+    //RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "SerialFeedBack: %ld", sizeof(SerialFeedback));
+    //RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "msg_boardTemp: %d", msg.boardTemp);
 
-    if (msg_len == sizeof(SerialFeedback))
+    if (msg_len == 23)// sizeof(SerialFeedback))
     {
       uint16_t checksum = (uint16_t)(msg.start ^
                                      msg.cmd1 ^
@@ -399,8 +421,12 @@ namespace hoverboard_driver
                                      msg.boardTemp ^
                                      msg.cmdLed);
 
-      if (msg.start == START_FRAME && msg.checksum == checksum)
+      // RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "MSG LEN 23");
+
+      if (msg.start == START_FRAME)// && msg.checksum == checksum)
       {
+        // RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "PUBLISHING");
+
         hardware_publisher->publish_voltage((double)msg.batVoltage / 100.0);
         hardware_publisher->publish_temp((double)msg.boardTemp / 10.0);
         ;
@@ -454,13 +480,21 @@ namespace hoverboard_driver
 
     // Convert PID outputs in RAD/S to RPM
     //double set_speed[2] = {
-     //   pid_outputs[0] / 0.10472,
-      //  pid_outputs[1] / 0.10472};
+    //    pid_outputs[0] / 0.10472
+     //   pid_outputs[1] / 0.10472};
 
      double set_speed[2] = {
            hw_commands_[left_wheel] / 0.10472,
            hw_commands_[right_wheel] / 0.10472
      };
+
+    RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "max vel: %lf", max_velocity);
+
+    set_speed[0] = std::clamp(set_speed[0], -max_velocity, max_velocity); 
+    set_speed[1] = std::clamp(set_speed[1], -max_velocity, max_velocity);
+
+    RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "speed 0: %lf", set_speed[0]);
+    RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "speed 1: %lf", set_speed[1]);
 
     // Calculate steering from difference of left and right
     const double speed = (set_speed[0] + set_speed[1]) / 2.0;
