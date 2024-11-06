@@ -488,13 +488,13 @@ namespace hoverboard_driver
            hw_commands_[right_wheel] / 0.10472
      };
 
-    RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "max vel: %lf", max_velocity);
+   // RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "max vel: %lf", max_velocity);
 
     set_speed[0] = std::clamp(set_speed[0], -max_velocity, max_velocity); 
     set_speed[1] = std::clamp(set_speed[1], -max_velocity, max_velocity);
 
-    RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "speed 0: %lf", set_speed[0]);
-    RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "speed 1: %lf", set_speed[1]);
+   // RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "speed 0: %lf", set_speed[0]);
+   // RCLCPP_INFO(rclcpp::get_logger("hoverboard_driver"), "speed 1: %lf", set_speed[1]);
 
     // Calculate steering from difference of left and right
     const double speed = (set_speed[0] + set_speed[1]) / 2.0;

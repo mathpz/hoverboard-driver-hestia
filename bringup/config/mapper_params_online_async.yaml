@@ -7,7 +7,7 @@ slam_toolbox:
     ceres_preconditioner: SCHUR_JACOBI
     ceres_trust_strategy: LEVENBERG_MARQUARDT
     ceres_dogleg_type: TRADITIONAL_DOGLEG
-    ceres_loss_function: None
+    ceres_loss_function: CauchyLoss
 
     # ROS Parameters
     odom_frame: odom
@@ -39,8 +39,8 @@ slam_toolbox:
     # General Parameters
     use_scan_matching: true
     use_scan_barycenter: true
-    minimum_travel_distance: 0.5
-    minimum_travel_heading: 0.5
+    minimum_travel_distance: 0.15
+    minimum_travel_heading: 0.15
     scan_buffer_size: 10
     scan_buffer_maximum_scan_distance: 10.0
     link_match_minimum_response_fine: 0.1  
