@@ -4,7 +4,7 @@
 <joint name="lidar_joint" type="fixed">
   <parent link="${prefix}base_link"/>
   <child link="lidar_link"/>
-  <origin xyz="0.30 0 0.20" rpy="0 0 ${PI}"/>
+  <origin xyz="${base_width/2} 0 -0.023" rpy="0 0 ${PI}"/>
 </joint>
 
   <link name="lidar_link">
@@ -17,14 +17,14 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="0.0508" length="0.055"/>
+        <cylinder radius="0.0508" length="0.047"/>
       </geometry>
     </collision>
 
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="0.0508" length="0.055"/>
+        <cylinder radius="0.0508" length="0.047"/>
       </geometry>
     </visual>
   </link>
@@ -39,8 +39,12 @@
         <horizontal>
           <samples>360</samples>
           <resolution>1.000000</resolution>
+          <min_angle>0</min_angle>
+          <max_angle>6.280000</max_angle>
+        <!--  
           <min_angle>-1.0472</min_angle>
           <max_angle>1.0472</max_angle>
+        -->
         </horizontal>
       </scan>
       <range>

@@ -21,6 +21,10 @@ from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, 
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
+from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+
 from ament_index_python.packages import get_package_share_directory
 import os
 
@@ -87,6 +91,16 @@ def generate_launch_description():
         remappings=[('/cmd_vel_out', '/hoverboard_base_controller/cmd_vel_unstamped')]
     )
 
+    lidar_node = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([os.path.join(get_package_share_directory(package_name), 'launch', 'rplidar.launch.py'
+        )]),
+    )
+
+    lidar_filter_node = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([os.path.join(get_package_share_directory(package_name), 'launch', 'laser_filter.launch.py'
+        )]),
+    )
+
     #rviz_node = Node(
     #    package="rviz2",
     #    executable="rviz2",
@@ -131,6 +145,8 @@ def generate_launch_description():
        # delay_rviz_after_joint_state_broadcaster_spawner,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
         twist_mux,
+        lidar_node,
+        lidar_filter_node,
     ]
 
     return LaunchDescription(declared_arguments + nodes)
